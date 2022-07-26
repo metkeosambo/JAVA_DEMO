@@ -7,7 +7,8 @@
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
-
+<style>
+</style>
 </head>
 <body>
 	<div class="container">
@@ -15,7 +16,7 @@
 			<div class="col-sm-3"></div>
 			<div class="col-sm-6">
 				<ul class="nav nav-tabs" id="myTab">
-				  <li class="nav-item">
+				  <li class="nav-item info">
 				    <a class="nav-link active" href="#" id-code="FORM">Create Position</a>
 				  </li>
 				  <li class="nav-item">
@@ -64,6 +65,7 @@
 		$("#posname").val('');
 		$("#des").val('');
 	}
+	
 	$("#myTab a").click(function (e){
 		e.preventDefault();
 		$("#myTab .active").removeClass("active");
@@ -81,20 +83,21 @@
 			$("#FORM").hide();
 		}
 	});
+	
 	function Save(){
-		//var filters = { "name" : name , "pwd":pwd };
+		
 		var data = {};
 		data["positionId"] = Math.floor(1000+Math.random()*9000);
 		data["positionName"] = $("#posname").val();
 		data["description"] = $("#des").val();
-		console.log(data);
-        //filters = JSON.stringify(filters);
+
         $.ajax({
             type: "POST",
             url: "/position/save",
             data: data,
             timeout: 600000,
             success: function (data) {
+            	alert("successful");
             	clear();
             	location.replace("/position");
                 //...
