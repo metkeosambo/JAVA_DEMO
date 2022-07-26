@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<ul class="nav nav-tabs" id="myTab">
+				  <li class="nav-item">
+				    <a class="nav-link active" href="#" id-code="FORM">Create Position</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" href="#" id-code="LIST">Position List</a>
+				  </li>
+				</ul>
+				<div class="row" id="FORM">
+					<div class="container">
+					    <label for="posname"><b>Position Name</b></label>
+					    <input type="text" class="form-control" id="posname" required>
+					
+					    <label for="des"><b>Description</b></label>
+					    <textarea class="form-control" id="des" required> </textarea>
+					        
+					    <button type="button" class="btn btn-info text-left" style="margin-top:10px" onClick='Save()'>Save</button>
+					  
+					  </div>
+				</div>
+				<div class="row" id="LIST" style="display:none">
+					<div class="col">
+						<table class="table">
+						  <thead class="thead-dark">
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Position</th>
+						      <th scope="col">Desciption</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr th:each=" pro : ${position}">
+						      <th scope="row" th:text="${pro.positionId}"></th>
+						      <td th:text="${pro.positionName}"></td>
+						      <td th:text="${pro.description}"></td>
+						    </tr>
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3"></div>
+		</div>
+	</div>
+	
+	<script>
+	function clear(){
+		$("#posname").val('');
+		$("#des").val('');
+	}
+	$("#myTab a").click(function (e){
+		e.preventDefault();
+		$("#myTab .active").removeClass("active");
+		
+		$(this).parent().addClass("active");
+		
+		var t = $(this).attr("id-code");
+		
+		$("#"+t).show();
+		clear();
+		
+		if(t=="FORM"){
+			$("#LIST").hide();
+		}else{
+			$("#FORM").hide();
+		}
+	});
+	function Save(){
+		//var filters = { "name" : name , "pwd":pwd };
+		var data = {};
+		data["positionId"] = Math.floor(1000+Math.random()*9000);
+		data["positionName"] = $("#posname").val();
+		data["description"] = $("#des").val();
+		console.log(data);
+        //filters = JSON.stringify(filters);
+        $.ajax({
+            type: "POST",
+            url: "/position/save",
+            data: data,
+            timeout: 600000,
+            success: function (data) {
+            	clear();
+            	location.replace("/position");
+                //...
+            },
+            error: function (e) {
+            	console.log(e)
+                //...
+            }
+		});
+	}
+</script>
+</body>
+</html>
